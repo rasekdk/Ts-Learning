@@ -1,9 +1,13 @@
 // Modules
-import { Response, Request } from "express";
+import { Response, Request, response } from "express";
+import Joi from "joi";
 
 // Code
 import { connect } from "../src/database";
 import { userInterface } from "../interfaces/user.interface";
+import { userSchema } from "../schemas/users.schemas";
+import { insertUser } from "../repository/user.repository";
+import { ErrorInterface } from "../interfaces/error.interfaces";
 
 export async function getUsers(req: Request, res: Response): Promise<Response>{
     const conn = await connect();
@@ -14,12 +18,20 @@ export async function getUsers(req: Request, res: Response): Promise<Response>{
 }
 
 export async function createUser(req:Request, res: Response): Promise<Response> {
-    const newUser= req.body;
-    
-    const conn = await connect();
-    await conn.query('INSERT INTO users SET ?', [newUser]);
+    try {
+        const newUser: userInterface = req.body;
 
-    return res.json({
-        message: 'User Created'
-    });
+        await userSchema(newUser, res);
+
+        await insertUser(newUser);
+
+        return res.json(newUser);
+    } catch (err) {
+        
+        err.name === 'ValidationError' ? err.status = 400 : err.status = 500;
+
+        res.status(err.status);
+
+        return res.send({error: err.name, message: err.message, status : err.status})
+    }
 }

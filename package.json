@@ -19,6 +19,7 @@
   "homepage": "https://github.com/rasekdk/Community#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "joi": "^17.4.0",
     "morgan": "^1.10.0",
     "mysql2": "^2.2.5"
   },
