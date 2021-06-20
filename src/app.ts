@@ -2,8 +2,9 @@ import express, { Application } from "express";
 import morgan from "morgan";
 
 // Routes
-import IndexRoutes from '../routes/index.routes'
-import UserRoutes from '../routes/users.routes'
+import indexRoutes from '../routes/index.routes'
+import usersRoutes from '../routes/users.routes'
+import userRoutes from '../routes/user.routes'
 
 export class App {
 
@@ -19,8 +20,9 @@ export class App {
     }
 
     routes() {
-        this.app.use(IndexRoutes);
-        this.app.use('/user',UserRoutes);
+        this.app.use(indexRoutes);
+        this.app.use('/users', usersRoutes)
+        this.app.use('/user',userRoutes);
     }
 
     settings() {
